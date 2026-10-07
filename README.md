@@ -289,7 +289,7 @@ node wiki-write\tools\check.mjs  --topic <专题目录>                         
 
 **MIT** —— 拿去用、改、再发布都行，**保留版权声明与许可声明**即可。
 
-完整条款见 [`LICENSE`](LICENSE)（版权人：`wiki-skills`）。
+完整条款见 [`LICENSE`](LICENSE)（版权人：`kirito0000001`）。
 
 ⚠️ **本许可覆盖的是本仓库自己的内容** —— 三个技能的规则条文，以及这三份文档。
 技能正文里另记着各**来源**的许可与取用方式（`wiki-collect/SKILL.md` 与
