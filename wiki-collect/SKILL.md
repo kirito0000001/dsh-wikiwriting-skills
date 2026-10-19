@@ -246,7 +246,8 @@ whenToUse: 用户给出一批本地一手材料并要整理成可供写作引用
 #### ⭐v0.5 新增：**必读集现在多重 —— 现场量，别抄上表**
 
 ```powershell
-$k='C:\Users\liuyu\.dsh\skills\wiki-collect'
+# 在本技能目录（wiki-collect/）下运行；否则把 $k 改成该目录的实际路径
+$k = (Get-Location).Path
 '采集-代码.md','采集-剧本与设定.md','素材账本字段.md' | ForEach-Object {
   '{0,8:N0} B  {1}' -f (Get-Item "$k\references\$_").Length, $_
 }

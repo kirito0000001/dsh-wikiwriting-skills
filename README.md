@@ -11,7 +11,7 @@
 **A-05**｜状态：一手已核｜断言：技能有**五个**默认加载根，按 rank 扫描；**装一次给所有项目用**是
   rank 400 的 `<dshHome>/skills`（`dshHome` 默认 `$DSH_HOME` 或 `~/.dsh`），**只给一个项目用**
   是 rank 100 的 `<项目根>/.dsh/skills`
-  - 定位：`D:\NewData\deepseek\DSH Desktop\resources\app\node_modules\
+  - 定位：`<DSH 安装目录>\resources\app\node_modules\
           @deepseek-ai\dsh-skill-filesystem\README.zh.md:44-56`
   - 引用路径：`dsh_fs[根目录与优先级]`
   - 证据：小节「根目录与优先级」的表格列出 100 `project-dsh`／200 `project-agents`／
@@ -25,7 +25,7 @@
   - **矛盾**：`A-04`（同一 URL，一条已核一条未核）→ 见 `#### 未决`
 ```
 
-（上面两条的**换行**是为了放进代码块而加的，字段一个字没改。）
+（上面两条的**换行**是为了放进代码块而加的；机器相关的绝对路径已改写为 `<DSH 安装目录>`，其余字段一个字没改。）
 
 **两条的区别就是这套技能的全部主张**：
 `一手已核` 的可以直接写进正文，`二手线索` 的**必须降级措辞**；

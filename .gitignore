@@ -1,5 +1,5 @@
 ﻿# 三个技能包的发布仓库（DSH）
-# 由 C:\Users\liuyu\.dsh\skills\ 的工作副本复制而来
+# 由技能工作副本（默认 $HOME/.dsh/skills/）复制而来
 *.tmp
 *.bak
 *.bak[0-9]

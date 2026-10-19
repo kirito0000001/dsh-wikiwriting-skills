@@ -247,7 +247,7 @@ const UNCOMMITTED_RE = /工作区文件|未入库|未提交|未纳入版本|giti
 const KEY_NOT_LITERAL_RE = /\.\.|…|~|、|,|，|\*/;
 
 // glob／模板／占位符 —— **不是具体路径**，③④ 一律跳过并计数。
-//   实测误报：某账本登记 `D:\…\Artifacts\CrossingVoidZDTool\v*`（`v*` 是"版本目录"的通配写法），
+//   实测误报：某账本登记 `<工作区>\Artifacts\CrossingVoidZDTool\v*`（`v*` 是"版本目录"的通配写法），
 //   第一版把它当具体路径去 probe，报了一条 advisory。**模式不是位置。**
 const PATH_PATTERN_RE = /[*?{}<>…]|\.\.\./;
 
@@ -1451,7 +1451,7 @@ const FIXTURES = [
   // 负16 ③：glob／模板／占位符**不是位置**，跳过并计数（实测误报：`…\Artifacts\…\v*`）
   { name: '负16 ③：glob 模式不是路径，只计数不报', kind: 'ledger', base: 'self', expect: [],
     expectCounters: { 'table-checked': 0, 'table-unchecked': 1 },
-    lines: L('## 0. 源表登记', '| `artifact` | `D:\\X\\Artifacts\\v*` | 版本目录 |',
+    lines: L('## 0. 源表登记', '| `artifact` | `ws\\Artifacts\\v*` | 版本目录 |',
              '- **A-01**｜状态：一手已核｜断言：第一条断言内容足够长',
              '  - 钉死：commit:a1b2c3d') },
   // 负12 ②：矛盾的两侧都是真条目 → 不报
@@ -1495,7 +1495,7 @@ const FIXTURES = [
              '  - 钉死：commit:a1b2c3d') },
 
   // ── 数值不变量（COL-S09，v0.5 新增）─────────────────────────────────────────
-  // 这些夹具的表格行**逐字抄自真实语料** `_实战/_归档-游戏设计文档采集/02_设定表.md`
+  // 这些夹具的表格行**逐字抄自真实语料** `<工作区>/_实战/_归档-游戏设计文档采集/02_设定表.md`
   // （778 行数值表，2026-10-07），不是编出来的形状 —— 因为这一查最容易死在
   // 「真实写法五花八门，正则只认自己想象的形态」上。
   { name: '正18 INV-RANGE 区间上下界颠倒', kind: 'invariants', expect: [['COL-S09', 'major']],
