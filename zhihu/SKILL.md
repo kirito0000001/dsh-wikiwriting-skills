@@ -1,11 +1,33 @@
 ---
 name: zhihu
 description: 动手前先查别人走过的路。固定流程：先多轮检索并建立候选清单，再统一研读知乎/CSDN/GitHub/官方文档，最后自己验证（实跑一次 / 一手原文 / 官方页自验）。适用于实现新功能、改不熟悉的第三方插件、验证机制是否生效、排查说不清的故障、技术选型与规范调研，尤其是引擎、构建、打包、热更新这类黑盒；写「资料搜集 / 方案对比」类文档时同样适用。用户说「开始做 / 动手 / 验证 / 查一下原因 / 研究一下 / 调研一下 / 先搜集资料」时触发。
+license: MIT
+compatibility: Agent Skills 规范；可在 DSH、pi、Claude Code、Codex、Gemini CLI 等 harness 使用。需要联网与搜索/抓取能力；DSH 的 pwsh 与引擎矩阵是可选配方，其它 harness 按当地工具替换。
 ---
 
 # Research First
 
 **在动手之前先查别人走过的路。** 目的只有两个：不重复造轮子，不绕大弯子去踩别人已经踩过的坑。
+
+> **非 DSH harness**：本技能可在 pi / Claude Code / Codex / Gemini CLI 等 Agent Skills harness 中使用。
+> `whenToUse` 只有 DSH 读；其它 harness 按 `description` 路由。安装位置、工具映射与 POSIX 配方见仓库根 [`HARNESSES.md`](../HARNESSES.md)。
+
+## 0. 非 DSH harness 适配（先读）
+
+本技能按 Agent Skills 规范组织；`whenToUse` 只有 DSH 读，其它 harness 按 `description` 路由。
+正文里的工具名是 DSH 的叫法，换 harness 按这张表替换：
+
+| 能力 | DSH | 其它 harness 常见叫法 |
+| --- | --- | --- |
+| 抓网页 | `web_fetch` | `WebFetch` / `web_fetch` / `curl -L` |
+| 网页搜索 | `advanced_search` / `multi_search` / `free_search_test` | `WebSearch` / `google_web_search` / `web_search` / 搜索引擎 API |
+| 代码平台搜索 | `platform_search` | `gh search` / GitHub API / 平台自带搜索 |
+| 跑命令 | `pwsh` | `Bash` / `shell` / `run_shell_command` / bash / zsh |
+| 并行子代理 | 子代理 | subagent / task / `context: fork` |
+
+⛔ **没有某项能力时，把它写进缺口，不要假装搜过。**
+⚠️ 本文件后面的「DSH 检索工具速查」「DSH profile 限制」「pwsh 配方」都是 **DSH 专属现状**；
+别的 harness 可能有不同能力（例如浏览器、原生 WebSearch），**按当地能力重测**，别把 DSH 的结论当普适真理。
 
 ## 什么时候必须跑这个流程
 
@@ -420,9 +442,12 @@ $u='https://openstd.samr.gov.cn/bzgk/gb/std_list?p.p1=0&p.p90=circulation_date&p
 - **二手转载里的"官方说法"必须回官方核**（例：某模型厂商的"禁用词清单"只有自媒体转载，得回官方文档确认是否真有其事）。
 - **被多个引擎同时命中的那一条**（`[seen in: a, b]`）优先读 —— 但它只是"覆盖面广"，不等于"结论正确"。
 
-### 已废弃的旧路线（Codex 时代，DSH 里不要再试）
+### 已废弃的旧路线（Codex 时代，仅限 DSH 现状）
 
-这份技能原本是给 Codex 写的，下面这些在本机**已经不可用**，看到就跳过：
+> ⚠️ **这一节是 DSH profile 的现状，不是普适结论。** 在别的 harness 里，如果有浏览器 / CUA / 可用搜索，
+> 下面这些旧路线**可能仍然可用**；按当地能力重测，别因为这一段就跳过。
+
+这份技能原本是给 Codex 写的；下面这些在**当前 DSH profile** 里已经不可用，DSH 用户看到就跳过：
 
 | 旧做法 | 为什么废了 |
 | --- | --- |

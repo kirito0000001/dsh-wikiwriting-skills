@@ -2,11 +2,17 @@
 name: wiki-write
 description: 把《素材账本》写成给别人看的成稿——README、技术文章、设定集条目、剧本、小说。负责重构（定读者与主线、去耦合、按读者重排、拆篇）、成文（按文体骨架）、验收（零上下文复述测试）。用户说「帮我写一篇」「把这份素材写成文章」「写个 README」「写设定条目」「这段读起来不清楚」「帮我改稿」时使用。不是只给维基条目用。输入应是 wiki-collect 的产出；检索走 zhihu；不负责采集素材。
 whenToUse: 已有素材账本（或一批材料）要落成成稿时；已有草稿读起来不清楚、要改稿时；一篇文章重点太多、要决定拆不拆篇时；成稿前要跑验收（零上下文复述测试）时。
+license: MIT
+compatibility: Agent Skills 规范；可在 DSH、pi、Claude Code、Codex、Gemini CLI 等 harness 使用。需要 Node.js 跑 tools/check.mjs / publish.mjs；PowerShell 片段可选，非 Windows 用 bash 等价命令。
 ---
 
 # 成文（wiki-write）
 
 把素材写成**别人看得懂、能照着做**的成稿。采集归 `wiki-collect`，检索归 `zhihu`。
+
+> **非 DSH harness**：本技能可在 pi / Claude Code / Codex / Gemini CLI 等 Agent Skills harness 中使用。
+> `whenToUse` 只有 DSH 读；其它 harness 按 `description` 路由。工具名按你 harness 的实际名称替换；
+> `tools/check.mjs` / `tools/publish.mjs` 是零依赖 Node 脚本，跨平台。安装位置与工具映射见仓库根 [`HARNESSES.md`](../HARNESSES.md)。
 
 **交付定义**（⛔ **分两档，见 §0**）：
 - **日常档（默认）**：**两个文件** —— 一份同源、带 `〔A-nn〕` 角标的**校对版**（`04_草稿.md`）＋ 一份**机械生成的发布版**（`06_发布版.md`）；**要落地时**另加 `07_交付说明.md` 的**「落地」一节**。

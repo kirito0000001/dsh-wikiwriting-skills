@@ -2,11 +2,17 @@
 name: wiki-collect
 description: 把一手材料（代码仓库、剧本与设定、自己的旧稿、实验数据）读成《素材账本》+《设定表》+《缺口清单》——每条带可回溯定位、够核对的证据、能判真假的状态。用户说「先采集素材」「把这些材料整理成能引用的」「读一遍这个仓库/剧本/设定，把能用的挑出来」「给我建素材账本」时使用。不是只给维基条目用：README、技术文章、设定集条目、剧本、小说都走这条。不写正文、不排版发布、不做网络检索（走 zhihu）、不做终审。
 whenToUse: 用户给出一批本地一手材料并要整理成可供写作引用的素材时；已有选题卡、要按问题分组采集时；旧账本被发现有定位翻不回去的条目、需要回原文补采时；材料横跨多个作品或仓库、需要拆给子代理并行读时。
+license: MIT
+compatibility: Agent Skills 规范；可在 DSH、pi、Claude Code、Codex、Gemini CLI 等 harness 使用。需要 Node.js 跑 tools/check.mjs；PowerShell 片段可选，非 Windows 用 bash 等价命令。
 ---
 
 # 素材采集（wiki-collect）
 
 把一堆散材料变成**能被引用、能被反驳、能被接着用**的素材账本 + 设定表 + 缺口清单，下游拿它下笔时不必回头问「这句哪来的」。
+
+> **非 DSH harness**：本技能可在 pi / Claude Code / Codex / Gemini CLI 等 Agent Skills harness 中使用。
+> `whenToUse` 只有 DSH 读；其它 harness 按 `description` 路由。工具名按你 harness 的实际名称替换；
+> `tools/check.mjs` 是零依赖 Node 脚本，跨平台。安装位置与工具映射见仓库根 [`HARNESSES.md`](../HARNESSES.md)。
 
 ## 0. ⭐ 两种用法：**日常档**与**改进档**（v0.5 新增 —— 决定你后面读多少）
 
@@ -252,6 +258,14 @@ $k = (Get-Location).Path
   '{0,8:N0} B  {1}' -f (Get-Item "$k\references\$_").Length, $_
 }
 '{0,8:N0} B  SKILL.md' -f (Get-Item "$k\SKILL.md").Length
+```
+
+非 Windows（在 `wiki-collect/` 下运行）：
+
+```bash
+for f in references/采集-代码.md references/采集-剧本与设定.md references/素材账本字段.md SKILL.md; do
+  printf '%8d B  %s\n' "$(wc -c < "$f")" "$f"
+done
 ```
 
 ⛔ **「按需」的文件不进必读集 —— 但它们必须有加载信号，否则作者会漏读。** 加文件时**这两件事都要做**。

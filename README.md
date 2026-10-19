@@ -1,6 +1,6 @@
 # dsh-wikiwriting-skills
 
-**dsh-wikiwriting-skills** 是一套给 DSH 用户的写作技能，它让 AI 写出来的每一句都能翻回材料出处。
+**dsh-wikiwriting-skills** 是一套写作技能：最初为 DSH 写，也能在 pi / Claude Code / Codex / Gemini CLI 等 Agent Skills harness 中使用。它让 AI 写出来的每一句都能翻回材料出处。
 
 ## 一条素材条目长什么样
 
@@ -62,7 +62,8 @@
 
 ## 快速开始
 
-> **前提**：你已经在用 **DSH**。这三个是 DSH 技能，没有 DSH 就没有加载器。
+> **DSH 用户**：按下面的 PowerShell 块装进 DSH 用户技能根。
+> **pi / Claude Code / Codex / Gemini CLI 用户**：见 [`HARNESSES.md`](HARNESSES.md)，或直接用本节末尾的「通用安装」。
 
 在**仓库根目录**执行（就是你 clone 或下载下来的那个目录）：
 
@@ -94,7 +95,36 @@ selftest: OK（28 项断言，13 个夹具）
 于是从仓库根执行会看到 `found N (major=1)`（内容是「找不到 `01_素材账本.md`」），
 **并以退出码 1 结束**。**那不是安装失败** —— 另外两个工具会正常停。
 
-**不需要重启 DSH** —— 技能监视是默认开的，新增／改名／删除会被自动发现。
+### 通用安装（非 DSH）
+
+这三个技能按 Agent Skills 规范组织，装到任意兼容 harness 的用户技能根即可：
+
+```bash
+# macOS / Linux：pi 换成 ~/.pi/agent/skills，Claude Code 换成 ~/.claude/skills
+target="$HOME/.agents/skills"
+mkdir -p "$target"
+cp -R wiki-collect wiki-write zhihu "$target/"
+```
+
+```powershell
+# Windows PowerShell
+$target = "$HOME\.agents\skills"
+New-Item -ItemType Directory -Force -Path $target | Out-Null
+Copy-Item -Recurse -Force .\wiki-collect, .\wiki-write, .\zhihu $target
+```
+
+| Harness | 用户目录 | 项目目录 | 调用 |
+| --- | --- | --- | --- |
+| **pi** | `~/.pi/agent/skills/` | `.pi/skills/` | `/skill:wiki-collect` |
+| **Claude Code** | `~/.claude/skills/` | `.claude/skills/` | `/wiki-collect` |
+| **Codex** | `~/.agents/skills/` | `.agents/skills/` | `$wiki-collect` 或 `/skills` |
+| **Gemini CLI** | `~/.gemini/skills/` 或 `~/.agents/skills/` | `.gemini/skills/` 或 `.agents/skills/` | `/skills list` |
+| **其它 Agent Skills harness** | `~/.agents/skills/` | `.agents/skills/` | 看 harness 文档 |
+
+目录名必须匹配 `SKILL.md` 里的 `name`；**别多套一层**。工具名映射、DSH 专属内容清单与 POSIX 配方见 [`HARNESSES.md`](HARNESSES.md)。
+
+**DSH 不需要重启** —— 技能监视是默认开的，新增／改名／删除会被自动发现。
+其它 harness 按各自的热加载／重启规则：pi 用 `/reload`；Codex / Gemini CLI 用 `/skills` 确认列表；Claude Code 通常下次会话自动发现。
 
 ## 目录
 
@@ -102,6 +132,7 @@ selftest: OK（28 项断言，13 个夹具）
 - [三个技能：检索 → 采集 → 成文](#三个技能检索--采集--成文)
 - [它能写哪五种东西](#它能写哪五种东西)
 - [快速开始](#快速开始)
+- [在非 DSH harness 中使用](HARNESSES.md)
 - [它解决什么问题](#它解决什么问题)
 - [安装](#安装)
 - [用法](#用法)
@@ -131,7 +162,7 @@ selftest: OK（28 项断言，13 个夹具）
 
 ## 安装
 
-### 装到哪：五个默认加载根，按 rank 扫描
+### DSH：五个默认加载根，按 rank 扫描
 
 | Rank | 来源 | 路径 | 什么时候用 |
 | --- | --- | --- | --- |
@@ -153,14 +184,21 @@ selftest: OK（28 项断言，13 个夹具）
 `~/.dsh/skills/my-skills/wiki-collect/SKILL.md` **不会被发现** ——
 **别为了整理目录多套一层。**
 
+### 其它 harness：装到哪
+
+非 DSH harness 的目录约定、调用方式与工具映射见 [`HARNESSES.md`](HARNESSES.md)。
+最短版本：pi 用 `~/.pi/agent/skills/`，Claude Code 用 `~/.claude/skills/`，
+Codex / Gemini CLI / 其它 Agent Skills harness 用 `~/.agents/skills/`。
+
 ### 三个会让人「装上了却用不了」的坑
 
-1. **`name` 不合规 = 整条技能被静默忽略**。
-   它必须匹配 `^[a-z0-9]+(?:-[a-z0-9]+)*$`（小写字母、数字、单连字符）。
-   ⚠️ 不会报错，日志里只有一行 `ignored: invalid skill name`。
-2. **frontmatter 里只有六个字段会被读到**：
+1. **`name` 不合规 = 整条技能可能不加载**。
+   它必须匹配 `^[a-z0-9]+(?:-[a-z0-9]+)*$`（小写字母、数字、单连字符，Agent Skills 规范）。
+   ⚠️ DSH 是静默忽略，日志里只有一行 `ignored: invalid skill name`；别的 harness 可能给 warning，但别赌。
+2. **DSH 只读六个字段**：
    `name` · `description` · `whenToUse` · `disable-model-invocation` · `user-invocable` · `metadata`。
-   **其它一切静默忽略** —— 写 `license:` 没人读得到。
+   其它 harness 按 Agent Skills 规范也可接受 `license` / `compatibility` / `allowed-tools`（不一定参与路由）；
+   `whenToUse` 只有 DSH 读，别指望它在别处参与路由。
 3. **`description` 缺失 = 整条技能不加载**。它是路由依据，不是注释。
 
 ## 用法
@@ -236,6 +274,7 @@ dsh-wikiwriting-skills/
 ├── wiki-write/       SKILL.md + 9 份 references（**含 5 套文体骨架**）+ tools/（3 份）
 ├── zhihu/            SKILL.md
 ├── README.md         ← 你正在读的（面向使用者）
+├── HARNESSES.md      非 DSH harness 的安装位置与工具映射
 ├── 制作过程.md        这套技能是怎么做出来的（面向学习者）
 └── 对接文档.md        下次改进这套技能从哪接手（面向技能制作方）
 ```
